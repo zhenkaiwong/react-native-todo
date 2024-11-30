@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { TextInput } from "react-native";
 
 type Props = {
@@ -5,6 +6,7 @@ type Props = {
 };
 
 export default function TodoInput({ updateTodoList }: Props) {
+  const [inputValue, setInputValue] = useState<string>("");
   return (
     <TextInput
       style={{
@@ -14,7 +16,12 @@ export default function TodoInput({ updateTodoList }: Props) {
         padding: 10,
       }}
       placeholder="What to do?"
-      onSubmitEditing={({ nativeEvent }) => updateTodoList(nativeEvent.text)}
+      value={inputValue}
+      onChangeText={(text) => setInputValue(text)}
+      onSubmitEditing={() => {
+        updateTodoList(inputValue);
+        setInputValue("");
+      }}
     />
   );
 }

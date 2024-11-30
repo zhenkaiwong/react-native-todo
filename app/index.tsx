@@ -1,25 +1,9 @@
 import { useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { View } from "react-native";
 import TodoInput from "@/components/TodoInput";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    gap: 10,
-  },
-  completedItemText: {
-    textDecorationLine: "line-through",
-  },
-});
+import ItemList from "@/components/ItemList";
+import TodoItem from "@/components/TodoItem";
+import CompletedItem from "@/components/CompletedItem";
 
 export default function Index() {
   function generateDummies(total: number) {
@@ -33,9 +17,6 @@ export default function Index() {
 
   const [todoList, setTodoList] = useState<string[]>([]);
   const [completedList, setCompletedList] = useState<string[]>([]);
-  const [isCollapseTodoList, setIsCollapseTodoList] = useState<boolean>(false);
-  const [isCollapseCompletedList, setIsCollapseCompletedList] =
-    useState<boolean>(false);
 
   function updateTodoList(todo: string) {
     if (todo === "testtodo") {
@@ -78,83 +59,36 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flex: 1,
+        padding: 20,
+        gap: 10,
+      }}
+    >
       <TodoInput updateTodoList={updateTodoList} />
 
       <View style={{ flex: 2, gap: 25 }}>
-        <View style={styles.sectionView}>
-          {todoList.length === 0 ? (
-            <Text style={styles.sectionTitle}>Your list is empty 🤔</Text>
-          ) : (
-            <View>
-              <View style={styles.listHeaderView}>
-                <CollapseIndicator isCollapse={isCollapseTodoList} />
-                <Text
-                  style={styles.sectionTitle}
-                  onPress={() =>
-                    setIsCollapseTodoList((previousState) => !previousState)
-                  }
-                >
-                  To do list 🏃‍➡️
-                </Text>
-              </View>
-
-              <FlatList
-                data={todoList}
-                renderItem={({ item }) => (
-                  <TodoItem
-                    itemText={item}
-                    onCompleteButtonClickedHandle={
-                      onCompleteButtonClickedHandle
-                    }
-                    onRemoveButtonClickedHandle={onRemoveButtonClickedHandle}
-                  />
-                )}
-              />
-            </View>
+        <ItemList
+          data={todoList}
+          renderItem={({ item }) => (
+            <TodoItem
+              itemText={item}
+              onCompleteButtonClickedHandle={onCompleteButtonClickedHandle}
+              onRemoveButtonClickedHandle={onRemoveButtonClickedHandle}
+            />
           )}
-        </View>
+          emptyListMessage="Your list is empty 🤔"
+          title="To do list 🏃‍➡️"
+        />
 
-        <View style={styles.sectionView}>
-          {completedList.length === 0 ? (
-            <Text style={styles.sectionTitle}>Nothing is completed 🫢</Text>
-          ) : (
-            <View>
-              <View style={styles.listHeaderView}>
-                <CollapseIndicator isCollapse={isCollapseCompletedList} />
-                <Text
-                  style={styles.sectionTitle}
-                  onPress={() =>
-                    setIsCollapseCompletedList(
-                      (previousState) => !previousState
-                    )
-                  }
-                >
-                  Accomplished 🙌
-                </Text>
-              </View>
-              <FlatList
-                data={completedList}
-                renderItem={({ item }) => <CompletedItem itemText={item} />}
-              />
-            </View>
-          )}
-        </View>
+        <ItemList
+          data={completedList}
+          renderItem={({ item }) => <CompletedItem itemText={item} />}
+          emptyListMessage="Nothing is completed 🫢"
+          title="To do list 😎"
+        />
       </View>
-    </View>
-  );
-}
-
-type CompletedItemProps = {
-  itemText: string;
-};
-
-function CompletedItem(props: CompletedItemProps) {
-  return (
-    <View style={styles.todoItemView}>
-      <Text style={[styles.todoItemText, styles.completedItemText]}>
-        ✌️ {props.itemText}
-      </Text>
     </View>
   );
 }

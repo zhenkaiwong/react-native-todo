@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import CollapseIndicator from "./CollapseIndicator";
+import { useState } from "react";
 
 type Props = {
   data: string[];
-  isCollapseList: boolean;
-  setIsCollapseList: (value: React.SetStateAction<boolean>) => void;
   emptyListMessage: string;
+  title: string;
+  renderItem: (renderItemProps: { item: string; index: number }) => JSX.Element;
 };
 
 const styles = StyleSheet.create({
@@ -13,6 +14,10 @@ const styles = StyleSheet.create({
 });
 
 export default function ItemList(props: Props) {
+  const [isCollapse, setIsCollapse] = useState<boolean>(false);
+  function toggleCollapse() {
+    setIsCollapse((previousState) => !previousState);
+  }
   return (
     <View
       style={{
@@ -20,7 +25,7 @@ export default function ItemList(props: Props) {
       }}
     >
       {props.data.length === 0 ? (
-        <Text style={styles.sectionTitle}>Your list is empty 🤔</Text>
+        <Text style={styles.sectionTitle}>{props.emptyListMessage}</Text>
       ) : (
         <View>
           <View
@@ -30,27 +35,18 @@ export default function ItemList(props: Props) {
               gap: 10,
             }}
           >
-            <CollapseIndicator isCollapse={props.isCollapseList} />
-            <Text
-              style={styles.sectionTitle}
-              onPress={() =>
-                props.setIsCollapseList((previousState) => !previousState)
-              }
-            >
-              To do list 🏃‍➡️
+            <CollapseIndicator
+              isCollapse={isCollapse}
+              onPress={toggleCollapse}
+            />
+            <Text style={styles.sectionTitle} onPress={toggleCollapse}>
+              {props.title}
             </Text>
           </View>
 
-          <FlatList
-            data={data}
-            renderItem={({ item }) => (
-              <TodoItem
-                itemText={item}
-                onCompleteButtonClickedHandle={onCompleteButtonClickedHandle}
-                onRemoveButtonClickedHandle={onRemoveButtonClickedHandle}
-              />
-            )}
-          />
+          {!isCollapse && (
+            <FlatList data={props.data} renderItem={props.renderItem} />
+          )}
         </View>
       )}
     </View>
