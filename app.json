@@ -4,23 +4,31 @@
     "slug": "todo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/todo-logo.jpeg",
+    "splash": {
+      "image": "./assets/images/todo-splash.png",
+      "imageWidth": 200,
+      "resizeMode": "contain",
+      "backgroundColor": "#14162F"
+    },
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zhenkaiwong.todo"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.zhenkaiwong.todo"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/todo-logo.jpeg"
     },
     "plugins": [
       "expo-router",
@@ -36,6 +44,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ee9dece6-0b63-4d9c-b9f8-1b91ae6af566"
+      }
     }
   }
 }
